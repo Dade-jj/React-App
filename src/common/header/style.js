@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import logoPic from '../../static/logo.png' 
 
+export const SearchInfoList = styled.a`
+  overflow: hidden;
+`
+
 export const SearchInfoItem = styled.a`
   display: block;
   float: left;
@@ -10,8 +14,8 @@ export const SearchInfoItem = styled.a`
   margin-bottom: 15px;
   font-size: 12px;
   border: 1px solid #ddd;
-  color: #969696;
-  border-radius: 2px;
+  color: #333;
+  border-radius: 3px;
 `
 
 export const SearchInfoSwitch = styled.span`
@@ -32,7 +36,6 @@ export const SearchInfo = styled.div`
   left: 0;
   top: 56px;
   width: 240px;
-  height: 100px;
   padding: 0 20px;
   box-shadow: 0 0 8px rgba(0, 0, 0, .2);
 `

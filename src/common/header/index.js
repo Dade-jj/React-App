@@ -1,17 +1,36 @@
 import React,{ Component } from 'react'
 import {
-  HeaderWrapper, Logo, Nav, NavItem, NavSearch, Addition, Button, SearchWrapper, SearchInfo, SearchInfoTitle, SearchInfoSwitch, SearchInfoItem
+  HeaderWrapper, Logo, Nav, NavItem, NavSearch, Addition, Button, SearchWrapper, SearchInfo, SearchInfoTitle, SearchInfoSwitch, SearchInfoItem, SearchInfoList
 } from './style'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { actionCreators } from './store'
 
 class Header extends Component {
-  constructor(props) {
-    super(props)
-  }
+  getListArea() {
+    const { focused, list } = this.props
 
-  render() {
+    if(focused) {
+      return (
+        <SearchInfo>
+                <SearchInfoTitle>热门搜索
+                  <SearchInfoSwitch>换一换</SearchInfoSwitch>
+                </SearchInfoTitle>
+                <SearchInfoList>
+                  {
+                    list.map((item) => {
+                      return  <SearchInfoItem key={item}>{item}</SearchInfoItem>
+                    })
+                  }
+                  </SearchInfoList>
+              </SearchInfo>
+      )
+    }else {
+      return null
+    }
+  }
+    render() {
+      const { focused, handleInputFocus, handleInputBlur } = this.props
     return (
       <HeaderWrapper>
         <Logo></Logo>
@@ -22,25 +41,13 @@ class Header extends Component {
           <NavItem className='right'><i className="iconfont">&#xe636;</i></NavItem>
           <SearchWrapper>
             <CSSTransition
-            in={this.props.focused}
+            in={focused}
             timeout={200}
             classNames="slide">
-              <NavSearch className={this.props.focused?'focused':''} onFocus={this.props.handleInputFocus} onBlur={this.props.handleInputBlur}></NavSearch>
+              <NavSearch className={focused?'focused':''} onFocus={handleInputFocus} onBlur={handleInputBlur}></NavSearch>
             </CSSTransition>
-            <i className={this.props.focused?'focused iconfont':'iconfont'}>&#xe63d;</i>
-            <SearchInfo>
-              <SearchInfoTitle>热门搜索
-                <SearchInfoSwitch>换一换</SearchInfoSwitch>
-                <div>
-                  <SearchInfoItem>历史</SearchInfoItem>
-                  <SearchInfoItem>历史</SearchInfoItem>
-                  <SearchInfoItem>历史</SearchInfoItem>
-                  <SearchInfoItem>历史</SearchInfoItem>
-                  <SearchInfoItem>历史</SearchInfoItem>
-                  <SearchInfoItem>历史</SearchInfoItem>
-                </div>
-              </SearchInfoTitle>
-            </SearchInfo>
+            <i className={focused?'focused iconfont':'iconfont'}>&#xe63d;</i>
+            { this.getListArea() }
           </SearchWrapper>
         </Nav>
         <Addition>
@@ -54,15 +61,16 @@ class Header extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    focused: state.getIn(['header', 'focused'])
+    focused: state.getIn(['header', 'focused']),
+    list: state.getIn(['header', 'list'])
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     handleInputFocus() {
-      const action = actionCreators.searchFocus()
-      dispatch(action)
+      dispatch(actionCreators.getList())
+      dispatch(actionCreators.searchFocus())
     },
     handleInputBlur() {
       const action = actionCreators.searchBlur()
